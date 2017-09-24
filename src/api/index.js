@@ -47,9 +47,14 @@ export default({config, db}) => {
       res.send(`problem with request: ${e.message}`);
     });
 
+    request.on('success', (e) => {
+      res.send('sucess!', e)
+    })
+
     // write data to request body
     request.write(postData);
     request.end();
+    res.send('success');
 
   })
 
