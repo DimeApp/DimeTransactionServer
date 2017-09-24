@@ -3,12 +3,6 @@ import facets from './facets';
 var http = require('http');
 var querystring = require('querystring');
 
-// const master_key = "session token";
-
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-// axios.defaults.headers.post['x-parse-application-id'] = '11011011';
-// axios.defaults.headers.post['x-parse-session-token'] = process.env.master_key;
-
 export default({config, db}) => {
   let api = Router();
 
@@ -20,8 +14,8 @@ export default({config, db}) => {
     res.send("sup mama nature!");
   });
 
-  api.post('/processTransaction/:item_id', (req, res) => {
-    const itemId = req.params.item_id;
+  api.post('/processTransaction', (req, res) => {
+    const itemId = req.param('item_id');
 
     const postData = querystring.stringify({'item_id': itemId});
 
@@ -50,7 +44,7 @@ export default({config, db}) => {
     });
 
     request.on('error', (e) => {
-      res.error(`problem with request: ${e.message}`);
+      res.send(`problem with request: ${e.message}`);
     });
 
     // write data to request body
