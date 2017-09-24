@@ -1,0 +1,7 @@
+{
+	"port": 8080,
+	"bodyLimit": "100kb",
+	"corsHeaders": ["Link"],
+	"dev_url" : "https://dime-server.herokuapp.com/parse/functions/processTransaction",
+	"master_key": "unkown"
+}
