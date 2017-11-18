@@ -15,50 +15,55 @@ export default({config, db}) => {
   });
 
   api.post('/processTransaction', (req, res) => {
-    const itemId = req.param('item_id');
+    try {
+      const itemId = req.param('item_id');
 
-    const postData = querystring.stringify({'item_id': itemId});
+      const postData = querystring.stringify({'item_id': itemId});
 
-    const options = {
-      hostname: 'https://dime-server.herokuapp.com',
-      path: '/parse/functions/process_transaction',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'x-parse-master-key': '45ba92cc-f659-4a2b-adb4-ae2168447a23',
-        'x-parse-application-id': "11011011"
-      }
-    };
+      const options = {
+        hostname: 'dime-server.herokuapp.com',
+        path: '/parse/functions/process_transaction',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'x-parse-master-key': '45ba92cc-f659-4a2b-adb4-ae2168447a23',
+          'x-parse-application-id': "11011011"
+        }
+      };
 
-    const request = http.request(options, (res) => {
-      console.log(`STATUS: ${res.statusCode}`);
-      console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-      res.setEncoding('utf8');
-      res.on('data', (chunk) => {
-        console.log(`BODY: ${chunk}`);
+      const request = http.request(options, (res) => {
+        console.log(`STATUS: ${res.statusCode}`);
+        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+          if (chunk.status == 400) {
+            console.log("HEY NOAH BAD REQUEST")
+          }
+          console.log(`BODY: ${chunk}`);
+        });
+        res.on('end', () => {
+          console.log('No more data in response.');
+        });
       });
-      res.on('end', () => {
-        console.log('No more data in response.');
+
+      request.on('error', (e) => {
+        res.send(`problem with request: ${e.message}`);
+        // request.end()
       });
-    });
 
-    request.on('error', (e) => {
-      res.send(`problem with request: ${e.message}`);
-      // request.end()
-    });
+      request.on('success', (e) => {
+        res.send('sucess!', e)
+        // request.end()
+      })
 
-    request.on('success', (e) => {
-      res.send('sucess!', e)
-      // request.end()
-    })
-
-    // write data to request body
-    request.write(postData);
-    request.end();
-    res.send("success")
+      // write data to request body
+      request.write(postData);
+      request.end();
+      res.send("success")
+    } catch(e) {
+      console.log('error', e)
+  }
   })
-
-
 
   return api;
 }
