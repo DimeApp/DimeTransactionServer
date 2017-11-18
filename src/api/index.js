@@ -20,8 +20,7 @@ export default({config, db}) => {
     const postData = querystring.stringify({'item_id': itemId});
 
     const options = {
-      hostname: 'localhost',
-      port: 5000,
+      hostname: 'https://dime-server.herokuapp.com',
       path: '/parse/functions/process_transaction',
       method: 'POST',
       headers: {
