@@ -45,18 +45,21 @@ export default({config, db}) => {
 
     request.on('error', (e) => {
       res.send(`problem with request: ${e.message}`);
+      // request.end()
     });
 
     request.on('success', (e) => {
       res.send('sucess!', e)
+      // request.end()
     })
 
     // write data to request body
     request.write(postData);
     request.end();
-    res.send('success');
-
+    res.send("success")
   })
+
+
 
   return api;
 }
